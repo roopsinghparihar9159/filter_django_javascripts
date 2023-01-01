@@ -1,0 +1,128 @@
+{% extends 'mainapp/index.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-6 ">
+            <table class="table" id="table1">
+                <thead>
+                    <th scope="col">ID</th>
+                    <th scope="col">IMAGE</th>
+                    <th scope="col">NAME</th>
+                    <th scope="col">PINCODE</th>
+                    <th scope="col">COUNTRY</th>
+                </thead>
+                <tbody>
+                    {% for state in object_list %}
+                    <tr>
+                        <td>
+                            {{state.id}}
+                        </td>
+                        <td>
+                            <img src="https://www.shutterstock.com/image-photo/ancient-temple-ruins-gadi-sagar-260nw-786126286.jpg"
+                             width="100" height="80" class="rounded">
+                        </td>
+                        <td>
+                            {{state.name}}
+                        </td>
+                        <td>
+                            {{state.pincode}}
+                        </td>
+                        <td>
+                            {{state.country}}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-4 ml-auto mr-auto">
+            <h1>Autocomplete</h1>
+            <div>
+                <label for="label">State Autocomplete</label>
+                <input type="text" id="id_state" class="form-control" onkeyup="searchrecord();">
+                <button onclick="getAutocomplete()" class="mb-5 btn btn-success"> Get Value </button>
+            </div>
+
+            <div>
+                <label for="label">State Dropdown</label>
+                <div>
+                    <select id="select_state" class="form-control">
+                        <option>Select State</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- {{object_list}} -->
+
+
+
+<!-- {% for sta in object_list %}
+    {% if sta.id == 0 %}
+        {{sta.id}}
+        {{sta.name}}
+        {{sta.country}}
+    {% elif sta.country.id == 3 %}
+        {{sta.id}}
+        {{sta.name}}
+        {{sta.country}}
+        <br>
+    {% endif %}
+
+
+
+    <!-- {{sta.id}} -->
+    <!-- <br> -->
+<!-- {% endfor %} -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+<link href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" rel="stylesheet" />
+<script>
+    $(function(){
+        $('#id_state').autocomplete({
+            source:function(request,response){
+                $.ajax({
+                    type:'GET',
+                    url:'http://127.0.0.1:8000/jsonlink/',
+                    JsonType:'json',
+                    success:function(data){
+                        response($.map(data,function(item){
+                            return {label:item.name,value:item.name}
+                        }))
+                    }
+                });
+            },
+        });
+    });
+    
+    function searchrecord(){
+        debugger;
+        var input,table,tr,td,filter,i,txtdata;
+        input = document.getElementById("id_state");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("table1");
+        tr=table.getElementsByTagName("tr");
+        for(i=0;i<tr.length;i++){
+            td=tr[i].getElementsByTagName("td")[2];
+            if(td)
+            {
+                txtdata=td.innerText;
+                if(txtdata.toUpperCase().indexOf(filter)>-1)
+                {
+                    tr[i].style.display="";
+                }
+                else
+                {
+                    tr[i].style.display="none";
+                }
+            }
+        }
+    }
+    
+</script>
+{% endblock %}
